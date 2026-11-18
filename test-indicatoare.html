@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIKNORA | Indicatoare interactive</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#061326;
+ color:white;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:24px 12px;
+ text-align:center;
+ background:#0b203b;
+ border-bottom:1px solid #164e63;
+}
+h1{
+ margin:0;
+ color:#51f5c2;
+ letter-spacing:4px;
+ text-shadow:0 0 16px #00ff9c;
+}
+.subtitle{
+ color:#94a3b8;
+ font-size:13px;
+ margin-top:10px;
+}
+.match{
+ text-align:center;
+ padding:22px 10px;
+ font-size:19px;
+ font-weight:bold;
+}
+.badge{
+ display:block;
+ color:#67e8f9;
+ font-size:11px;
+ margin-top:8px;
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;
+ padding:10px;
+ max-width:950px;
+ margin:auto;
+}
+.card{
+ min-width:0;
+ padding:15px 8px;
+ text-align:center;
+ border:1px solid #21415c;
+ border-radius:17px;
+ background:linear-gradient(145deg,#102540,#071629);
+ box-shadow:0 6px 20px #0005;
+}
+.card h3{
+ font-size:13px;
+ min-height:34px;
+ margin:0 0 10px;
+ color:#e2e8f0;
+}
+.ring{
+ --color:#39ffab;
+ --pct:75%;
+ width:min(125px,100%);
+ aspect-ratio:1;
+ border-radius:50%;
+ margin:12px auto;
+ padding:10px;
+ background:conic-gradient(
+ var(--color) var(--pct),
+ #263a52 var(--pct)
+ );
+ box-shadow:0 0 19px var(--color);
+ transition:background .2s,box-shadow .2s;
+}
+.inner{
+ width:100%;
+ height:100%;
+ border-radius:50%;
+ background:#08182e;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+}
+.percent{
+ font-size:30px;
+ font-weight:bold;
+ color:var(--color);
+ text-shadow:0 0 12px var(--color);
+}
+.small{
+ font-size:9px;
+ color:#94a3b8;
+}
+.threshold{
+ font-size:13px;
+ font-weight:bold;
+ min-height:32px;
+ margin-top:12px;
+}
+.mode{
+ font-size:10px;
+ color:#67e8f9;
+ min-height:26px;
+}
+input[type=range]{
+ width:95%;
+ margin:12px 0;
+ accent-color:#42f5bb;
+ cursor:pointer;
+}
+.scale{
+ display:flex;
+ justify-content:space-between;
+ color:#94a3b8;
+ font-size:10px;
+}
+button{
+ background:#123c4c;
+ border:1px solid #34d399;
+ color:#7fffd4;
+ border-radius:9px;
+ padding:9px 5px;
+ font-size:10px;
+ width:100%;
+ cursor:pointer;
+}
+button:active{background:#176b69}
+.note{
+ max-width:900px;
+ margin:25px auto;
+ padding:15px;
+ text-align:center;
+ color:#94a3b8;
+ font-size:12px;
+ line-height:1.6;
+}
+@media(min-width:700px){
+ .grid{grid-template-columns:repeat(3,1fr);gap:18px}
+ .ring{width:155px}
+ .card{padding:22px}
+ .percent{font-size:38px}
+ .card h3{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>VIKNORA</h1>
+<div class="subtitle">
+MOD EXPERT · INDICATOARE INTELIGENTE
+</div>
+</header>
+
+<div class="match">
+Aurora FC ⚽ Valencia Nord
+<span class="badge">DEMONSTRAȚIE INTERACTIVĂ</span>
+</div>
+
+<main class="grid" id="grid"></main>
+
+<div class="note">
+Toate procentele sunt fictive și servesc exclusiv
+testării interfeței. Verdele indică o frecvență
+statistică ridicată, iar roșul una scăzută.
+Nicio culoare nu reprezintă o garanție sau
+o recomandare de pariere.
+</div>
+
+<script>
+const indicators=[
+ {
+  name:"Goluri prima repriză",
+  unit:"goluri",
+  thresholds:[0.5,1.5,2.5,3.5,4.5],
+  rates:[86,57,28,9,2],
+  auto:1
+ },
+ {
+  name:"Goluri a doua repriză",
+  unit:"goluri",
+thresholds:[0.5,1.5,2.5,3.5,4.5],
+rates:[91,68,39,17,5],
+auto:1
+},
+{
+name:"Total goluri",
+unit:"goluri",
+thresholds:[0.5,1.5,2.5,3.5,4.5,5.5],
+rates:[96,85,69,43,22,9],
+auto:2
+},
+{
+name:"Cornere",
+unit:"cornere",
+thresholds:[3.5,5.5,7.5,9.5,11.5,13.5],
+rates:[97,89,76,58,34,16],
+auto:3
+},
+{
+name:"Cartonașe",
+unit:"cartonașe",
+thresholds:[0.5,1.5,2.5,3.5,4.5,5.5],
+rates:[98,91,79,62,42,24],
+auto:3
+},
+{
+name:"Șuturi pe poartă",
+unit:"șuturi",
+thresholds:[1.5,3.5,5.5,7.5,9.5,11.5],
+rates:[97,88,72,51,29,12],
+auto:2
+}
+];
+
+const grid=document.getElementById("grid");
+
+function getColor(value){
+  if(value>=70)return "#00ff9c";
+  if(value>=40)return "#ffe45c";
+  return "#ff5470";
+}
+
+function createIndicator(item,index){
+  const card=document.createElement("section");
+  card.className="card";
+
+  const title=document.createElement("h2");
+  title.textContent=item.name;
+
+  const circle=document.createElement("div");
+  circle.style.cssText="width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:20px auto;font-size:38px;font-weight:bold;border:7px solid #00ff9c;box-shadow:0 0 25px #00ff9c;";
+
+  const label=document.createElement("p");
+  label.style.textAlign="center";
+
+  const slider=document.createElement("input");
+  slider.type="range";
+  slider.min=0;
+  slider.max=item.thresholds.length-1;
+  slider.step=1;
+  slider.value=item.auto;
+  slider.style.width="100%";
+
+  const button=document.createElement("button");
+  button.textContent="↻ Selecție automată";
+  button.style.cssText="padding:12px;border:0;border-radius:12px;background:#00ff9c;color:#061326;font-weight:bold;border:0;border-radius:10px;cursor:pointer;";
+
+  function update(){
+    const position=Number(slider.value);
+    const threshold=item.thresholds[position];
+    const rate=item.rates[position];
+
+    label.textContent=`Peste ${threshold} ${item.unit}: ${rate}%`;
+
+    const color=rate>=70?"#00ff9c":rate>=40?"#ffcc00":"#ff4560";
+
+    circle.style.background=`conic-gradient(${color} ${rate}%,#203047 ${rate}%)`;
+    circle.style.boxShadow=`0 0 25px ${color}55`;
+    circle.textContent=rate+"%";
+  }
+
+  slider.addEventListener("input",update);
+
+  button.addEventListener("click",()=>{
+    slider.value=item.auto;
+    update();
+  });
+
+  card.appendChild(title);
+  card.appendChild(circle);
+  card.appendChild(label);
+  card.appendChild(slider);
+  card.appendChild(button);
+
+  document.getElementById("grid").appendChild(card);
+  update();
+}
+
+indicators.forEach((item,index)=>{
+  createIndicator(item,index);
+});
+</script>
+</body>
+</html>
