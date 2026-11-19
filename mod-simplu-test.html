@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIKNORA - Mod Simplu</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+background:#061326;
+color:#e8faff;
+font-family:Arial,sans-serif;
+}
+main{
+max-width:700px;
+margin:auto;
+padding:20px;
+}
+h1{
+color:#48dfff;
+text-align:center;
+letter-spacing:3px;
+}
+h2{font-size:22px}
+p{color:#a9c5d5;line-height:1.5}
+.badge{
+text-align:center;
+color:#49e5dc;
+font-size:13px;
+}
+.match{
+display:block;
+width:100%;
+text-align:left;
+background:#102b42;
+color:white;
+border:1px solid #328ca8;
+border-radius:18px;
+padding:20px;
+margin:15px 0;
+font-size:19px;
+cursor:pointer;
+}
+.match small{
+display:block;
+color:#a9c5d5;
+margin-bottom:12px;
+}
+.stats{
+display:flex;
+gap:8px;
+margin-top:15px;
+}
+.stats span{
+flex:1;
+text-align:center;
+background:#092034;
+border-radius:10px;
+padding:12px 4px;
+font-size:12px;
+}
+.stats b{
+display:block;
+font-size:23px;
+color:#49e5dc;
+margin-bottom:6px;
+}
+#details{
+display:none;
+background:#0b2038;
+border:1px solid #35c8ed;
+border-radius:20px;
+padding:15px;
+margin-top:20px;
+}
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+.card{
+background:#102b42;
+border:1px solid #267c9c;
+border-radius:16px;
+padding:12px 5px;
+text-align:center;
+}
+.ring{
+width:125px;
+height:125px;
+max-width:95%;
+border-radius:50%;
+margin:10px auto;
+display:grid;
+place-items:center;
+background:conic-gradient(
+var(--color) var(--percent),
+#244158 0
+);
+box-shadow:0 0 20px #14c8ff55;
+}
+.inner{
+width:80%;
+height:80%;
+border-radius:50%;
+background:#091d30;
+display:grid;
+place-items:center;
+font-size:28px;
+font-weight:bold;
+color:white;
+}
+.card h3{font-size:14px}
+.back{
+background:#13cbbb;
+border:0;
+border-radius:12px;
+padding:13px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+.note{
+font-size:12px;
+margin-top:25px;
+}
+</style></head>
+<body>
+<main>
+  <h1>VIKNORA</h1>
+  <p style="text-align:center">
+    Analiză inteligentă a fotbalului
+  </p>
+
+  <h2>⚽ Mod Simplu</h2>
+  <p>
+    Descoperă meciurile și tendințele importante.
+    Apasă pe un meci pentru a vedea analiza.
+  </p>
+
+  <button class="match" onclick="document.getElementById('details').style.display='block'">
+    Aurora FC – Valencia Nord
+    <small>Liga demonstrativă · 19:30</small>
+    <span class="stats">
+      <span><b>78%</b>Prima repriză</span>
+      <span><b>84%</b>A doua repriză</span>
+      <span><b>81%</b>Total goluri</span>
+    </span>
+  </button>
+
+  <section id="details">
+    <h2>Analiza meciului</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="ring" style="--percent:57">
+          <div class="inner">57%</div>
+        </div>
+       <h3>Goluri prima repriză</h3>
+</div>
+
+<div class="card">
+  <div class="ring" style="--percent:68;--color:#49e5dc">
+    <div class="inner">68%</div>
+  </div>
+  <h3>Goluri a doua repriză</h3>
+</div>
+
+<div class="card">
+  <div class="ring" style="--percent:72;--color:#48dfff">
+    <div class="inner">72%</div>
+  </div>
+  <h3>Total goluri</h3>
+</div>
+
+<div class="card">
+  <div class="ring" style="--percent:64;--color:#49e5dc">
+    <div class="inner">64%</div>
+  </div>
+  <h3>Forma echipelor</h3>
+</div></div>
+
+<button class="back" onclick="document.getElementById('details').style.display='none'">
+  ← Înapoi la meciuri
+</button>
+
+</section>
+
+<p class="note">
+  VIKNORA DEMO – Procentele sunt demonstrative, nu date live.
+</p>
+
+</main>
+</body>
+</html>
